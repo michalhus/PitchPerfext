@@ -23,7 +23,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     }
     
     // MARK: - Record and Stop Button and Label Behavior
-    func configureUI(isRecording:Bool){
+    func toggleRecordingButtons(isRecording:Bool){
         if(isRecording) {
             recordButton.isEnabled = false
             recordingLabel.text = "Recording in Progress"
@@ -36,7 +36,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     }
     
     @IBAction func recordAudio(_ sender: Any) {
-        configureUI(isRecording:true)
+        toggleRecordingButtons(isRecording:true)
     
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
         let recordingName = "recordedVoice.wav"
@@ -55,7 +55,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     }
     
     @IBAction func stopRecording(_ sender: Any) {
-        configureUI(isRecording:false)
+        toggleRecordingButtons(isRecording:false)
         audioRecorder.stop()
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
