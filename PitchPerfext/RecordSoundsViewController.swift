@@ -17,22 +17,16 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     @IBOutlet weak var recordingLabel: UILabel!
     @IBOutlet weak var stopRecordingButton: UIButton!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        stopRecordingButton.isEnabled = false
+    // MARK: - Record and Stop Button and Label Behavior
+    func toggleRecordingButtons(isRecording:Bool = false){
+        recordingLabel.text = isRecording ? "Recording in progress": "Tap to Record"
+        recordButton.isEnabled = !isRecording
+        stopRecordingButton.isEnabled = isRecording
     }
     
-    // MARK: - Record and Stop Button and Label Behavior
-    func toggleRecordingButtons(isRecording:Bool){
-        if(isRecording) {
-            recordButton.isEnabled = false
-            recordingLabel.text = "Recording in Progress"
-            stopRecordingButton.isEnabled = true
-        }else {
-            stopRecordingButton.isEnabled = false
-            recordingLabel.text = "Tap to Record"
-            recordButton.isEnabled = true
-        }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        toggleRecordingButtons()
     }
     
     @IBAction func recordAudio(_ sender: Any) {
@@ -63,12 +57,11 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     // MARK: - Audio Recorder Delegate
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        if flag {
-            performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
+        guard flag else {
+            print ("Recording was not successful...")
+            return
         }
-        else {
-            print("Recording was not successful...")
-        }
+        performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
